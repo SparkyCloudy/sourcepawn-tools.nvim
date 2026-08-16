@@ -1,0 +1,16 @@
+# OS metadata
+.DS_Store
+Thumbs.db
+
+# Swap and backup files
+*.swp
+*.swo
+*~
+*.bak
+
+# Temporary build / lint artifacts
+__tmp_*
+.sourceknight/
+build/
+compiled/
+*.smx

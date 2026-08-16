@@ -1,0 +1,23 @@
+BasedOnStyle: LLVM
+IndentWidth: 4
+TabWidth: 4
+UseTab: Never
+BreakBeforeBraces: Allman
+BreakAfterAttributes: Never
+AttributeMacros:
+  - public
+  - stock
+  - forward
+  - native
+  - normal
+  - static
+TypenameMacros:
+  - Action
+  - Plugin
+  - Handle
+  - Cookie
+  - ConVar
+KeepEmptyLines:
+  AtStartOfBlock: false
+MaxEmptyLinesToKeep: 1
+ColumnLimit: 120
