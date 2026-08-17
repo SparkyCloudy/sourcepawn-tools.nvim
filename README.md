@@ -72,6 +72,7 @@ require("sourcepawn-tools").setup({
     cmd = nil,                          -- Custom LSP command line (auto-detected if nil)
     disable_telemetry = true,           -- Pass --disable-telemetry to LSP
     debounce_text_changes = 150,        -- Delay in ms before sending changes to LSP
+    auto_save = true,                   -- Auto-save buffer quietly on edit to continuously trigger LSP diagnostics
     settings = {},                      -- Custom LSP settings (e.g. SourcePawnLanguageServer)
   },
   compiler = {
@@ -85,7 +86,7 @@ require("sourcepawn-tools").setup({
     options = {},                       -- Custom CLI flags passed to formatter
   },
   diagnostics = {
-    realtime = true,                    -- Real-time full line underline diagnostics on typing
+    realtime = false,                   -- Set to true to run spcomp shadow compiler (default: false, favors LSP)
     debounce_ms = 250,                  -- Debounce delay (ms) for live compiler check
   },
   keymaps = {

@@ -1,10 +1,15 @@
 local M = {}
 
+---@class sourcepawn.AutoSaveOpts
+---@field enabled? boolean
+---@field debounce_ms? integer
+
 ---@class sourcepawn.LspOpts
 ---@field enabled? boolean
 ---@field cmd? string[]
 ---@field disable_telemetry? boolean
 ---@field debounce_text_changes? integer
+---@field auto_save? boolean|sourcepawn.AutoSaveOpts
 ---@field settings? table
 
 ---@class sourcepawn.CompilerOpts
@@ -46,6 +51,7 @@ local default_config = {
 		cmd = nil,
 		disable_telemetry = true,
 		debounce_text_changes = 150,
+		auto_save = true, -- Auto-saves quietly on edit to continuously trigger LSP diagnostics
 		settings = {},
 	},
 	compiler = {
@@ -59,7 +65,7 @@ local default_config = {
 		options = {},
 	},
 	diagnostics = {
-		realtime = true,
+		realtime = false, -- Default to false since LSP auto-save handles diagnostics natively
 		debounce_ms = 250,
 	},
 	keymaps = {

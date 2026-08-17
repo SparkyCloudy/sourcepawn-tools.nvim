@@ -76,29 +76,40 @@ local function setup_autocommands()
 			start()
 			lsp.attach(args.buf)
 			setup_buffer_keymaps(args.buf)
-			if config.diagnostics.realtime then
+
+			-- Always protect SourcePawn buffers from destructive auto-formatting on save
+			vim.b[args.buf].autoformat = false
+
+			if cfg.diagnostics and cfg.diagnostics.realtime then
 				compiler.linter.debounce_lint(args.buf, 100)
 			end
 		end,
 	})
 
-	-- 2. Real-time live diagnostics on typing
-	autocmd({ "TextChanged", "TextChangedI" }, {
+	-- 2. Real-time live diagnostics / LSP auto-save on typing & insert leave
+	autocmd({ "TextChanged", "TextChangedI", "InsertLeave" }, {
 		group = AUGROUP,
 		pattern = { "*.sp", "*.inc" },
 		callback = function(args)
-			if config.diagnostics.realtime then
-				compiler.linter.debounce_lint(args.buf, config.diagnostics.debounce_ms)
+			local cfg = config.get_for_buffer(args.buf)
+			if cfg.diagnostics and cfg.diagnostics.realtime then
+				compiler.linter.debounce_lint(args.buf, cfg.diagnostics.debounce_ms)
+			end
+			if cfg.lsp and cfg.lsp.auto_save then
+				lsp.autosave.debounce_save(args.buf)
 			end
 		end,
 	})
 
-	-- 3. On Save: Clear realtime shadow diagnostics so LSP handles the saved state cleanly without duplication
+	-- 3. On Save: Update realtime shadow diagnostics if enabled
 	autocmd({ "BufWritePost" }, {
 		group = AUGROUP,
 		pattern = { "*.sp", "*.inc" },
 		callback = function(args)
-			compiler.linter.clear_lint(args.buf)
+			local cfg = config.get_for_buffer(args.buf)
+			if cfg.diagnostics and cfg.diagnostics.realtime then
+				compiler.linter.debounce_lint(args.buf, 10)
+			end
 		end,
 	})
 end

@@ -3,8 +3,12 @@ local path = lazy.require("sourcepawn-tools.utils.path")
 local config = lazy.require("sourcepawn-tools.config")
 local executable = lazy.require("sourcepawn-tools.executable")
 local root = lazy.require("sourcepawn-tools.lsp.root")
+local autosave = lazy.require("sourcepawn-tools.lsp.autosave")
 
 local M = {}
+
+M.root = root
+M.autosave = autosave
 
 ---Get merged LSP server configuration
 ---@param bufnr integer?
