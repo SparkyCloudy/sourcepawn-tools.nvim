@@ -41,17 +41,15 @@ function M.setup()
 		local file = (opts.args and opts.args ~= "") and opts.args or nil
 		local set_file = root.set_manual_main(file)
 		ui.notify("Main Entry Point set to: " .. path.basename(set_file), ui.INFO)
-		compiler.linter.run_lint(0)
 	end, {
 		nargs = "?",
 		complete = "file",
-		desc = "Set manual main entry point script for compilation and linting",
+		desc = "Set manual main entry point script for compilation and LSP",
 	})
 
 	create_cmd("SourcepawnUnsetMain", function()
 		root.clear_manual_main()
 		ui.notify("Main Entry Point reset to auto-detect", ui.INFO)
-		compiler.linter.run_lint(0)
 	end, {
 		desc = "Reset main entry point back to auto-detect",
 	})

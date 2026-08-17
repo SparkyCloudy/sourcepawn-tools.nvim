@@ -5,9 +5,7 @@ local executable = lazy.require("sourcepawn-tools.executable")
 local root = lazy.require("sourcepawn-tools.lsp.root")
 local ui = lazy.require("sourcepawn-tools.ui")
 
-local M = {
-	linter = lazy.require("sourcepawn-tools.compiler.linter"),
-}
+local M = {}
 
 ---Determine output .smx path for a compiled plugin
 ---@param compile_file string

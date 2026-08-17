@@ -85,10 +85,6 @@ require("sourcepawn-tools").setup({
   formatter = {
     options = {},                       -- Custom CLI flags passed to formatter
   },
-  diagnostics = {
-    realtime = false,                   -- Set to true to run spcomp shadow compiler (default: false, favors LSP)
-    debounce_ms = 250,                  -- Debounce delay (ms) for live compiler check
-  },
   keymaps = {
     compile = "<leader>cc",             -- Compile active / main plugin
     build_all = "<leader>cb",           -- Compile all plugins in workspace
@@ -110,6 +106,7 @@ require("sourcepawn-tools").setup({
 |                   | `cmd`                   | `string[] \| nil` | `nil`           | Custom command to run `sourcepawn-studio` binary.             |
 |                   | `disable_telemetry`     | `boolean`         | `true`          | Pass `--disable-telemetry` flag to LSP server.                |
 |                   | `debounce_text_changes` | `integer`         | `150`           | Milliseconds to debounce text sync to LSP.                    |
+|                   | `auto_save`             | `boolean`         | `true`          | Auto-saves quietly on edit to continuously trigger LSP diagnostics. |
 |                   | `settings`              | `table`           | `{}`            | Custom table passed to `SourcePawnLanguageServer`.            |
 | **`compiler`**    | `path`                  | `string \| nil`   | `nil`           | Path to `spcomp.exe` / `spcomp64.exe` (auto-detected).        |
 |                   | `include_dirs`          | `string[]`        | `{}`            | List of include directories passed with `-i`.                 |
@@ -117,8 +114,6 @@ require("sourcepawn-tools").setup({
 |                   | `main_file`             | `string \| nil`   | `nil`           | Explicit main entry file for modular projects.                |
 |                   | `default_output`        | `string`          | `"auto"`        | Output folder: `"auto"`, `"plugins"`, `"compiled"`, or path.  |
 | **`formatter`**   | `options`               | `string[]`        | `{}`            | Additional CLI flags passed to `clang-format`.                |
-| **`diagnostics`** | `realtime`              | `boolean`         | `true`          | Enable real-time on-typing compiler error diagnostics.        |
-|                   | `debounce_ms`           | `integer`         | `250`           | Milliseconds delay after typing before shadow compile.        |
 | **`keymaps`**     | `compile`               | `string \| false` | `"<leader>cc"`  | Keymap to compile current/main plugin (`false` to disable).   |
 |                   | `build_all`             | `string \| false` | `"<leader>cb"`  | Keymap to batch compile all plugins (`false` to disable).     |
 |                   | `doctor`                | `string \| false` | `"<leader>spd"` | Keymap to run `:SourcepawnDoctor` (`false` to disable).       |

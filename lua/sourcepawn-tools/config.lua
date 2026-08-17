@@ -20,10 +20,6 @@ local M = {}
 ---@field default_output? string "auto" | "plugins" | "compiled" | string
 ---@field output_dir? string
 
----@class sourcepawn.DiagnosticsOpts
----@field realtime? boolean
----@field debounce_ms? integer
-
 ---@class sourcepawn.KeymapsOpts
 ---@field compile? string|false
 ---@field build_all? string|false
@@ -41,7 +37,6 @@ local M = {}
 ---@field lsp? sourcepawn.LspOpts
 ---@field compiler? sourcepawn.CompilerOpts
 ---@field formatter? sourcepawn.FormatterOpts
----@field diagnostics? sourcepawn.DiagnosticsOpts
 ---@field keymaps? sourcepawn.KeymapsOpts
 ---@field hooks? sourcepawn.HooksOpts
 
@@ -63,10 +58,6 @@ local default_config = {
 	},
 	formatter = {
 		options = {},
-	},
-	diagnostics = {
-		realtime = false, -- Default to false since LSP auto-save handles diagnostics natively
-		debounce_ms = 250,
 	},
 	keymaps = {
 		compile = "<leader>cc",
