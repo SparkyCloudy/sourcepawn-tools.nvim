@@ -34,7 +34,14 @@ function M.get_server_config(bufnr)
 		cmd = cmd,
 		filetypes = { "sourcepawn" },
 		root_dir = root.resolve_root_dir,
-		root_markers = { "sourceknight.yaml", ".sourcepawn-tools.lua", ".sourcepawn.lua", ".spconfig.lua", ".git", "addons" },
+		root_markers = {
+			"sourceknight.yaml",
+			".sourcepawn-tools.lua",
+			".sourcepawn.lua",
+			".spconfig.lua",
+			".git",
+			"addons",
+		},
 		flags = {
 			debounce_text_changes = (cfg.lsp and cfg.lsp.debounce_text_changes) or 150,
 		},

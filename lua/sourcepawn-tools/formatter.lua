@@ -56,14 +56,21 @@ local function run_clang_format(bufnr, text, cb)
 	end
 
 	local fname = vim.api.nvim_buf_get_name(bufnr)
-	if fname == "" then fname = "plugin.sp" end
+	if fname == "" then
+		fname = "plugin.sp"
+	end
 	local file_dir = vim.fn.fnamemodify(fname, ":h")
 
 	local config = lazy.require("sourcepawn-tools.config")
 	local cfg = config.get_for_buffer(bufnr)
 
 	local cmd = { formatter }
-	if cfg.formatter and cfg.formatter.options and type(cfg.formatter.options) == "table" and #cfg.formatter.options > 0 then
+	if
+		cfg.formatter
+		and cfg.formatter.options
+		and type(cfg.formatter.options) == "table"
+		and #cfg.formatter.options > 0
+	then
 		for _, opt in ipairs(cfg.formatter.options) do
 			table.insert(cmd, opt)
 		end
@@ -98,7 +105,9 @@ end
 ---@param bufnr integer?
 function M.format(bufnr)
 	bufnr = (bufnr and bufnr ~= 0) and bufnr or vim.api.nvim_get_current_buf()
-	if not vim.api.nvim_buf_is_valid(bufnr) then return end
+	if not vim.api.nvim_buf_is_valid(bufnr) then
+		return
+	end
 
 	local lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
 	local text = table.concat(lines, "\n")
@@ -108,7 +117,9 @@ function M.format(bufnr)
 			ui.notify("clang-format error: " .. err, ui.ERROR)
 			return
 		end
-		if not vim.api.nvim_buf_is_valid(bufnr) then return end
+		if not vim.api.nvim_buf_is_valid(bufnr) then
+			return
+		end
 		-- Preserve trailing empty line logic
 		if lines[#lines] ~= "" and new_lines[#new_lines] == "" then
 			table.remove(new_lines, #new_lines)

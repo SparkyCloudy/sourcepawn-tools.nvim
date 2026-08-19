@@ -20,9 +20,7 @@ function M.debounce_save(bufnr, delay_ms)
 		return
 	end
 
-	local debounce_time = delay_ms
-		or (type(auto_save_cfg) == "table" and auto_save_cfg.debounce_ms)
-		or 500
+	local debounce_time = delay_ms or (type(auto_save_cfg) == "table" and auto_save_cfg.debounce_ms) or 500
 
 	if save_timers[bufnr] then
 		save_timers[bufnr]:stop()
