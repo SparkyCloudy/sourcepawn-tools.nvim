@@ -231,14 +231,36 @@ function M.install_formatter(callback)
 	end
 end
 
----Install all tools (LSP and Formatter)
+---Install or update official Treesitter parser for SourcePawn
+---@param callback fun(success: boolean, err: string?)?
+function M.install_treesitter(callback)
+	if vim.fn.exists(":TSInstall") == 2 or vim.fn.exists(":TSUpdate") == 2 then
+		ui.notify("Installing/updating SourcePawn Treesitter parser from official repo ...", ui.INFO)
+		vim.cmd("TSInstall sourcepawn")
+		if callback then
+			callback(true)
+		end
+	else
+		ui.notify(
+			"nvim-treesitter command not found. Please install 'nvim-treesitter/nvim-treesitter' to enable syntax highlighting.",
+			ui.WARN
+		)
+		if callback then
+			callback(false, "nvim-treesitter not installed")
+		end
+	end
+end
+
+---Install all tools (LSP, Formatter, and Treesitter parser)
 ---@param callback fun(success: boolean)?
 function M.install_all(callback)
 	M.install_lsp(function(ok_lsp)
 		M.install_formatter(function(ok_fmt)
-			if callback then
-				callback(ok_lsp and ok_fmt)
-			end
+			M.install_treesitter(function(ok_ts)
+				if callback then
+					callback(ok_lsp and ok_fmt and ok_ts)
+				end
+			end)
 		end)
 	end)
 end

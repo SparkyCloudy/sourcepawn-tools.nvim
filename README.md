@@ -51,13 +51,13 @@ return {
 
 ### 📥 Post-Installation (First-Time Setup)
 
-After installing the plugin, run **`:SourcepawnInstall`** (or `:SPInstall`) once inside Neovim to download the official `sourcepawn-studio` LSP server binary and set up the `clang-format` formatter:
+After installing the plugin, run **`:SourcepawnInstall`** (or `:SPInstall`) once inside Neovim to download the official `sourcepawn-studio` LSP server binary, configure the `clang-format` formatter, and install the official Treesitter parser:
 
 ```vim
 :SourcepawnInstall
 ```
 
-> **Tip:** You can verify your environment and toolchain health at any time by running **`:SourcepawnDoctor`** (`:SPDoctor`).
+> **Tip:** You can also install individual components via `:SourcepawnInstall lsp`, `:SourcepawnInstall formatter`, or `:SourcepawnInstall treesitter`. Run **`:SourcepawnDoctor`** (`:SPDoctor`) to verify health.
 
 ---
 
@@ -308,7 +308,7 @@ Outputs:
 
 | Command                                    | Alias          | Description                                                                         |
 | ------------------------------------------ | -------------- | ----------------------------------------------------------------------------------- |
-| `:SourcepawnInstall [lsp\|formatter\|all]` | `:SPInstall`   | Download LSP (`sourcepawn-studio`) and install Formatter (`clang-format` via Mason) |
+| `:SourcepawnInstall [lsp\|formatter\|treesitter\|all]` | `:SPInstall`   | Install official LSP (`sourcepawn-studio`), Formatter (`clang-format`), & Treesitter |
 | `:SourcepawnFormat`                        | `:SPFormat`    | Format active SourcePawn buffer using built-in rules or `.clang-format`             |
 | `:SourcepawnCompile [file]`                | `:SPCompile`   | Asynchronously compile current/main plugin                                          |
 | `:SourcepawnBuild`                         | `:SPBuild`     | Batch compile all main plugins in workspace                                         |

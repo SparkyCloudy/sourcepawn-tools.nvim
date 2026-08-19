@@ -62,7 +62,7 @@ function M.setup()
 		desc = "Format active SourcePawn buffer using clang-format",
 	})
 
-	-- 5. Binary Installer
+	-- 5. Binary & Toolchain Installer
 	create_cmd("SourcepawnInstall", function(opts)
 		local installer = require("sourcepawn-tools.installer")
 		local target = (opts.args and opts.args ~= "") and opts.args:lower() or "all"
@@ -70,15 +70,17 @@ function M.setup()
 			installer.install_lsp()
 		elseif target == "formatter" or target == "format" then
 			installer.install_formatter()
+		elseif target == "treesitter" or target == "ts" then
+			installer.install_treesitter()
 		else
 			installer.install_all()
 		end
 	end, {
 		nargs = "?",
 		complete = function()
-			return { "all", "formatter", "lsp" }
+			return { "all", "formatter", "lsp", "treesitter" }
 		end,
-		desc = "Install official LSP (sourcepawn-studio) and Formatter (clang-format via Mason)",
+		desc = "Install official toolchain (sourcepawn-studio LSP, clang-format, and Treesitter parser)",
 	})
 
 	-- 6. Code Generation & Templates
