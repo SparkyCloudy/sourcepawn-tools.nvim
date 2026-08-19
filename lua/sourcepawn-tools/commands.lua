@@ -13,145 +13,132 @@ end
 
 ---Register all user commands and aliases
 function M.setup()
-	-- 1. Compilation commands
-	create_cmd("SourcepawnCompile", function(opts)
-		local target = (opts.args and opts.args ~= "") and opts.args or nil
-		compiler.compile(target)
-	end, {
-		nargs = "?",
-		complete = "file",
-		desc = "Compile current plugin / main entry script (Single Compile)",
-	})
+	local commands = {
+		{
+			names = { "SourcepawnCompile", "SPCompile" },
+			callback = function(opts)
+				local target = (opts.args and opts.args ~= "") and opts.args or nil
+				compiler.compile(target)
+			end,
+			opts = {
+				nargs = "?",
+				complete = "file",
+				desc = "Compile current plugin / main entry script (Single Compile)",
+			},
+		},
+		{
+			names = { "SourcepawnBuild", "SPBuild" },
+			callback = function()
+				compiler.build_all()
+			end,
+			opts = {
+				desc = "Build all main plugins in workspace (Batch Build)",
+			},
+		},
+		{
+			names = { "SourcepawnDoctor", "SPDoctor" },
+			callback = function()
+				doctor.doctor()
+			end,
+			opts = {
+				desc = "Check SourcePawn LSP, compiler, and environment status",
+			},
+		},
+		{
+			names = { "SourcepawnSetMain", "SPSetMain" },
+			callback = function(opts)
+				local file = (opts.args and opts.args ~= "") and opts.args or nil
+				local set_file = root.set_manual_main(file)
+				ui.notify("Main Entry Point set to: " .. path.basename(set_file), ui.INFO)
+			end,
+			opts = {
+				nargs = "?",
+				complete = "file",
+				desc = "Set manual main entry point script for compilation and LSP",
+			},
+		},
+		{
+			names = { "SourcepawnUnsetMain", "SPUnsetMain" },
+			callback = function()
+				root.clear_manual_main()
+				ui.notify("Main Entry Point reset to auto-detect", ui.INFO)
+			end,
+			opts = {
+				desc = "Reset main entry point back to auto-detect",
+			},
+		},
+		{
+			names = { "SourcepawnFormat", "SPFormat" },
+			callback = function()
+				local formatter = require("sourcepawn-tools.formatter")
+				formatter.format(0)
+			end,
+			opts = {
+				desc = "Format active SourcePawn buffer using clang-format",
+			},
+		},
+		{
+			names = { "SourcepawnInstall", "SPInstall" },
+			callback = function(opts)
+				local installer = require("sourcepawn-tools.installer")
+				local target = (opts.args and opts.args ~= "") and opts.args:lower() or "all"
+				if target == "lsp" then
+					installer.install_lsp()
+				elseif target == "formatter" or target == "format" then
+					installer.install_formatter()
+				elseif target == "treesitter" or target == "ts" then
+					installer.install_treesitter()
+				else
+					installer.install_all()
+				end
+			end,
+			opts = {
+				nargs = "?",
+				complete = function()
+					return { "all", "formatter", "lsp", "treesitter" }
+				end,
+				desc = "Install official toolchain (sourcepawn-studio LSP, clang-format, and Treesitter parser)",
+			},
+		},
+		{
+			names = { "SourcepawnDocGen", "SPDocGen" },
+			callback = function()
+				local codegen = require("sourcepawn-tools.codegen")
+				codegen.generate_doc(0)
+			end,
+			opts = {
+				desc = "Generate Doxygen doc comment for function under cursor",
+			},
+		},
+		{
+			names = { "SourcepawnNewPlugin", "SPNewPlugin" },
+			callback = function(opts)
+				local codegen = require("sourcepawn-tools.codegen")
+				codegen.new_plugin(opts.args)
+			end,
+			opts = {
+				nargs = "?",
+				desc = "Scaffold a new SourcePawn plugin",
+			},
+		},
+		{
+			names = { "SourcepawnNewModule", "SPNewModule" },
+			callback = function(opts)
+				local codegen = require("sourcepawn-tools.codegen")
+				codegen.new_module(opts.args)
+			end,
+			opts = {
+				nargs = "?",
+				desc = "Scaffold a new SourcePawn submodule with include guards",
+			},
+		},
+	}
 
-	create_cmd("SourcepawnBuild", function()
-		compiler.build_all()
-	end, {
-		desc = "Build all main plugins in workspace (Batch Build)",
-	})
-
-	-- 2. Doctor & Diagnostics
-	create_cmd("SourcepawnDoctor", function()
-		doctor.doctor()
-	end, {
-		desc = "Check SourcePawn LSP, compiler, and environment status",
-	})
-
-	-- 3. Main Entry File overrides
-	create_cmd("SourcepawnSetMain", function(opts)
-		local file = (opts.args and opts.args ~= "") and opts.args or nil
-		local set_file = root.set_manual_main(file)
-		ui.notify("Main Entry Point set to: " .. path.basename(set_file), ui.INFO)
-	end, {
-		nargs = "?",
-		complete = "file",
-		desc = "Set manual main entry point script for compilation and LSP",
-	})
-
-	create_cmd("SourcepawnUnsetMain", function()
-		root.clear_manual_main()
-		ui.notify("Main Entry Point reset to auto-detect", ui.INFO)
-	end, {
-		desc = "Reset main entry point back to auto-detect",
-	})
-
-	-- 4. Formatter
-	create_cmd("SourcepawnFormat", function()
-		local formatter = require("sourcepawn-tools.formatter")
-		formatter.format(0)
-	end, {
-		desc = "Format active SourcePawn buffer using clang-format",
-	})
-
-	-- 5. Binary & Toolchain Installer
-	create_cmd("SourcepawnInstall", function(opts)
-		local installer = require("sourcepawn-tools.installer")
-		local target = (opts.args and opts.args ~= "") and opts.args:lower() or "all"
-		if target == "lsp" then
-			installer.install_lsp()
-		elseif target == "formatter" or target == "format" then
-			installer.install_formatter()
-		elseif target == "treesitter" or target == "ts" then
-			installer.install_treesitter()
-		else
-			installer.install_all()
+	for _, cmd in ipairs(commands) do
+		for _, name in ipairs(cmd.names) do
+			create_cmd(name, cmd.callback, cmd.opts)
 		end
-	end, {
-		nargs = "?",
-		complete = function()
-			return { "all", "formatter", "lsp", "treesitter" }
-		end,
-		desc = "Install official toolchain (sourcepawn-studio LSP, clang-format, and Treesitter parser)",
-	})
-
-	-- 6. Code Generation & Templates
-	create_cmd("SourcepawnDocGen", function()
-		local codegen = require("sourcepawn-tools.codegen")
-		codegen.generate_doc(0)
-	end, {
-		desc = "Generate Doxygen doc comment for function under cursor",
-	})
-
-	create_cmd("SourcepawnNewPlugin", function(opts)
-		local codegen = require("sourcepawn-tools.codegen")
-		codegen.new_plugin(opts.args)
-	end, {
-		nargs = "?",
-		desc = "Scaffold a new SourcePawn plugin",
-	})
-
-	create_cmd("SourcepawnNewModule", function(opts)
-		local codegen = require("sourcepawn-tools.codegen")
-		codegen.new_module(opts.args)
-	end, {
-		nargs = "?",
-		desc = "Scaffold a new SourcePawn submodule with include guards",
-	})
-
-	-- 7. Short Aliases
-	create_cmd("SPCompile", function(opts)
-		vim.cmd("SourcepawnCompile " .. (opts.args or ""))
-	end, { nargs = "?", complete = "file" })
-
-	create_cmd("SPBuild", function()
-		vim.cmd("SourcepawnBuild")
-	end, {})
-
-	create_cmd("SPDoctor", function()
-		vim.cmd("SourcepawnDoctor")
-	end, {})
-
-	create_cmd("SPSetMain", function(opts)
-		vim.cmd("SourcepawnSetMain " .. (opts.args or ""))
-	end, { nargs = "?", complete = "file" })
-
-	create_cmd("SPUnsetMain", function()
-		vim.cmd("SourcepawnUnsetMain")
-	end, {})
-
-	create_cmd("SPFormat", function()
-		vim.cmd("SourcepawnFormat")
-	end, {})
-
-	create_cmd("SPInstall", function(opts)
-		vim.cmd("SourcepawnInstall " .. (opts.args or ""))
-	end, {
-		nargs = "?",
-		complete = function()
-			return { "all", "formatter", "lsp" }
-		end,
-	})
-
-	create_cmd("SPDocGen", function()
-		vim.cmd("SourcepawnDocGen")
-	end, {})
-
-	create_cmd("SPNewPlugin", function(opts)
-		vim.cmd("SourcepawnNewPlugin " .. (opts.args or ""))
-	end, { nargs = "?" })
-
-	create_cmd("SPNewModule", function(opts)
-		vim.cmd("SourcepawnNewModule " .. (opts.args or ""))
-	end, { nargs = "?" })
+	end
 end
 
 return M
