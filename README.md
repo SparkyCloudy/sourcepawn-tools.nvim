@@ -12,11 +12,11 @@ Orchestrates **Language Server (`sourcepawn-studio`)**, **Treesitter syntax high
 - 💅 **SourcePawn Code Formatter**: Format code seamlessly via `:SourcepawnFormat` (`<leader>cf` / `<leader>spf`) or `conform.nvim` using `clang-format` (with native `SPFormat` support planned).
 - ⚡ **Zero-Config Auto-Discovery**: Automatically locates `sourcepawn-studio.exe` LSP, `spcomp.exe` compiler, and Mason/system `clang-format` from local plugin data, system `PATH`, VS Code extensions (`sarrus.sourcepawn-vscode`), or workspace directories.
 - 🎯 **Smart Main Entry Point (MainPath)**: Automatically discovers project roots and parent main scripts (e.g. `plugin.sp` with `myinfo`) when editing modular subfiles (`modules/*.sp`), eliminating missing include errors.
-- 🔄 **Real-Time Live Diagnostics**: Asynchronous compilation of temporary shadow buffers while typing (`TextChanged`, `TextChangedI`), displaying compiler errors inline via `vim.diagnostic`.
+- 🔄 **Continuous LSP Diagnostics**: Silent debounced auto-save triggers language server compiler diagnostics continuously while typing without manual saving or disruptive auto-formatting.
 - 🛠️ **Single & Batch Compilation**:
   - `:SourcepawnCompile` (`<leader>cc`): Asynchronously compiles active plugin and auto-routes `.smx` to `plugins/` or `compiled/` directory.
   - `:SourcepawnBuild` (`<leader>cb`): Compiles all main plugins in workspace concurrently.
-- 🩺 **Doctor Health Check**: `:SourcepawnDoctor` (`<leader>spd`) inspects LSP, compiler, formatter, active main scripts, and canonical include paths.
+- 🩺 **Doctor Health Check**: `:SourcepawnDoctor` (`<leader>spd`) inspects LSP, compiler, formatter, Treesitter parser, active main scripts, and canonical include paths.
 
 ---
 
@@ -44,6 +44,9 @@ return {
   {
     "SparkyCloudy/sourcepawn-tools.nvim",
     ft = "sourcepawn",
+    dependencies = {
+      "nvim-treesitter/nvim-treesitter",
+    },
     opts = {},
   },
 }

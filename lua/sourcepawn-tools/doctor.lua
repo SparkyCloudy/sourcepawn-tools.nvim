@@ -21,6 +21,15 @@ function M.doctor()
 	local inc_dirs = path.get_include_dirs(0, cfg.compiler and cfg.compiler.include_dirs)
 	local clients = lsp.get_clients(0)
 
+	local has_ts = pcall(require, "nvim-treesitter.parsers")
+	local has_parser = false
+	if has_ts then
+		local ok_p, parsers = pcall(require, "nvim-treesitter.parsers")
+		if ok_p and parsers and type(parsers.has_parser) == "function" then
+			has_parser = parsers.has_parser("sourcepawn")
+		end
+	end
+
 	local info = {
 		"=== SourcePawn Doctor ===",
 		"",
@@ -51,10 +60,18 @@ function M.doctor()
 				or "✗ Not found"
 			),
 		"",
-		"6. Status LSP Attached: "
+		"6. Treesitter Syntax Highlighting:",
+		"   Plugin: " .. (has_ts and "✓ nvim-treesitter detected" or "✗ nvim-treesitter not found"),
+		"   Parser: "
+			.. (
+				has_parser and "✓ sourcepawn parser installed"
+				or "✗ Not installed (run :SourcepawnInstall treesitter)"
+			),
+		"",
+		"7. Status LSP Attached: "
 			.. (#clients > 0 and ("✓ Active (Client ID: " .. clients[1].id .. ")") or "✗ Inactive"),
 		"",
-		"7. Include Directories (" .. #inc_dirs .. "):",
+		"8. Include Directories (" .. #inc_dirs .. "):",
 	}
 
 	for _, dir in ipairs(inc_dirs) do
