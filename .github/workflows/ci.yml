@@ -70,3 +70,17 @@ jobs:
           nvim --headless -u tests/minimal_init.lua `
             -c "PlenaryBustedDirectory tests/sourcepawn-tools {minimal_init = 'tests/minimal_init.lua', sequential = true}" `
             -c "qa"
+
+  release:
+    name: Release Please
+    needs: [lint, build-test]
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - uses: googleapis/release-please-action@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          release-type: simple
