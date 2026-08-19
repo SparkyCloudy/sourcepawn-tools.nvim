@@ -325,7 +325,8 @@ Outputs:
 
 This plugin serves as a Neovim companion bridge and relies fundamentally on the incredible work of the SourcePawn & SourceMod community:
 
-- **[Sarrus1](https://github.com/Sarrus1)**: For creating **[`sourcepawn-studio`](https://github.com/Sarrus1/sourcepawn-studio)** (the Rust-based Language Server Protocol implementation) and **[`SPFormat`](https://github.com/Sarrus1/SPFormat)** (the dedicated SourcePawn code formatter). This plugin entirely depends on these tools for its LSP intelligence, diagnostics, and code formatting capabilities.
+- **[Sarrus1](https://github.com/Sarrus1)**: For creating **[`sourcepawn-studio`](https://github.com/Sarrus1/sourcepawn-studio)** (the Rust-based Language Server Protocol implementation) and **[`SPFormat`](https://github.com/Sarrus1/SPFormat)** (the dedicated SourcePawn code formatter).
+- **[Nils Helmig](https://github.com/nilshelmig)**: For creating and maintaining the upstream **[`tree-sitter-sourcepawn`](https://github.com/nilshelmig/tree-sitter-sourcepawn)** grammar used for syntax highlighting.
 - **[AlliedModders LLC](https://alliedmods.net/)**: For the SourceMod platform, `spcomp` compiler, and the foundational SourcePawn language ecosystem.
 - **[`flutter-tools.nvim`](https://github.com/akinsho/flutter-tools.nvim)**: For the architectural inspiration behind the clean and modular structure of this plugin.
 

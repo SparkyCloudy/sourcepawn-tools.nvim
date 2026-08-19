@@ -29,9 +29,11 @@ function M.setup()
 				---@diagnostic disable-next-line: inject-field
 				parser_configs.sourcepawn = {
 					install_info = {
-						url = "https://github.com/Sarrus1/tree-sitter-sourcepawn",
+						url = "https://github.com/nilshelmig/tree-sitter-sourcepawn",
 						files = { "src/parser.c", "src/scanner.c" },
-						branch = "master",
+						branch = "main",
+						generate_requires_npm = false,
+						requires_generate_from_grammar = false,
 					},
 					filetype = "sourcepawn",
 				}
