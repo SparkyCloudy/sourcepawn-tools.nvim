@@ -38,6 +38,23 @@ function M.get_server_config(bufnr)
 		flags = {
 			debounce_text_changes = (cfg.lsp and cfg.lsp.debounce_text_changes) or 150,
 		},
+		-- Filter out verbose grammar token dumps from sourcepawn-studio's internal parser
+		handlers = {
+			["textDocument/publishDiagnostics"] = function(err, result, ctx, config_tbl)
+				if result and result.diagnostics then
+					local filtered = {}
+					for _, diag in ipairs(result.diagnostics) do
+						local msg = diag.message or ""
+						local is_messy_parser = diag.source == "sourcepawn-studio" and msg:match("^expected ")
+						if not is_messy_parser then
+							table.insert(filtered, diag)
+						end
+					end
+					result.diagnostics = filtered
+				end
+				vim.lsp.diagnostic.on_publish_diagnostics(err, result, ctx, config_tbl)
+			end,
+		},
 		settings = vim.tbl_deep_extend("force", {
 			SourcePawnLanguageServer = {
 				compiler = {
@@ -46,7 +63,7 @@ function M.get_server_config(bufnr)
 				},
 				includeDirectories = inc_dirs,
 				linter = {
-					disable = false,
+					disable = true, -- Favor clean spcomp diagnostics over internal AST parser errors
 				},
 			},
 		}, (cfg.lsp and cfg.lsp.settings) or {}),
