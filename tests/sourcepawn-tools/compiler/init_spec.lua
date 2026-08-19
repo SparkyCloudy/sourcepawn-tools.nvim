@@ -18,8 +18,6 @@ describe("compiler", function()
 		assert.is_function(M.build_all)
 	end)
 
-	it("Calling M.compile(nil) via pcall does not crash the process", function()
-		local ok, _ = pcall(M.compile, nil)
-		assert.is_true(true)
-	end)
+	-- Note: M.compile() triggers vim.fn.jobstart() for spcomp.
+	-- We only verify the API surface here; end-to-end compilation is tested manually.
 end)

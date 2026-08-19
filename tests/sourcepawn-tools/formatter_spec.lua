@@ -14,8 +14,6 @@ describe("formatter", function()
 		assert.is_function(M.format)
 	end)
 
-	it("Calling M.format(0) via pcall does not crash the process", function()
-		local ok, _ = pcall(M.format, 0)
-		assert.is_true(true)
-	end)
+	-- Note: M.format() triggers an async vim.fn.jobstart() call (clang-format).
+	-- We only verify the API surface here; end-to-end formatting is tested manually.
 end)
