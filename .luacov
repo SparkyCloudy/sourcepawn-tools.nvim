@@ -1,0 +1,7 @@
+return {
+  statsfile = 'luacov.stats.out',
+  reportfile = 'luacov.report.out',
+  include = { 'lua/sourcepawn%-tools' },
+  exclude = { 'tests/', '.luarocks', '/.luarocks' },
+  runreport = true,
+}
