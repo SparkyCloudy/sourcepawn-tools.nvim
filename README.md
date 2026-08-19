@@ -25,7 +25,7 @@ Orchestrates **Language Server (`sourcepawn-studio`)**, **Treesitter syntax high
 - **Neovim `>= 0.11.0`**
 - **[`nvim-treesitter`](https://github.com/nvim-treesitter/nvim-treesitter)** (for SourcePawn syntax highlighting).
 - **`clang-format`** (or **[`williamboman/mason.nvim`](https://github.com/williamboman/mason.nvim)** for automated installation).
-- **SourceMod Compiler (`spcomp` / `spcomp64`)** (from local SourceMod installation or [SourceKnight](https://github.com/tmick0/sourceknight)).
+- **SourceMod Compiler (`spcomp` / `spcomp64`)** (from local SourceMod installation or **[SourceKnight](https://github.com/SparkyCloudy/sourceknight)**).
 - **`curl` & `tar` / `unzip`** (for binary auto-installation via `:SourcepawnInstall`).
 
 ### Integrations (Optional)
@@ -256,6 +256,25 @@ require("conform").setup({
 
 ---
 
+## ⚡ SourceKnight Workspace Integration
+
+`sourcepawn-tools.nvim` provides first-class, out-of-the-box integration with **[SourceKnight](https://github.com/SparkyCloudy/sourceknight)** projects:
+
+- **Zero-Config Dependency Discovery**: When a `sourceknight.yaml` is present at your project root, the plugin automatically scans and feeds include directories staged under `.sourceknight/build/` to both the **LSP server (`sourcepawn-studio`)** and the **`spcomp` compiler**.
+- **Automated Compiler Resolution**: Automatically detects and uses the `spcomp` binary acquired by SourceKnight (e.g. via `smdrop` driver) without requiring manual system PATH installation.
+- **Seamless CI/CD**: Pair your local Neovim workflow with the official **`SparkyCloudy/sourceknight`** GitHub Action for fast, zero-boilerplate plugin compilation and distribution packaging:
+
+```yaml
+# Example .github/workflows/build.yml
+- name: Setup SourceKnight
+  uses: SparkyCloudy/sourceknight@master
+
+- name: Build and Package Plugin
+  run: sourceknight build --package -o dist/
+```
+
+---
+
 ## 📊 Statusline Integration (`lualine.nvim`)
 
 Show the active SourcePawn main entry point and submodule relationship dynamically in your statusline:
@@ -329,6 +348,7 @@ Outputs:
 This plugin serves as a Neovim companion bridge and relies fundamentally on the incredible work of the SourcePawn & SourceMod community:
 
 - **[Sarrus1](https://github.com/Sarrus1)**: For creating **[`sourcepawn-studio`](https://github.com/Sarrus1/sourcepawn-studio)** (the Rust-based Language Server Protocol implementation) and **[`SPFormat`](https://github.com/Sarrus1/SPFormat)** (the dedicated SourcePawn code formatter).
+- **[SourceKnight](https://github.com/SparkyCloudy/sourceknight)**: For the modern dependency management, automated SourceMod fetching (`smdrop`), and build packaging engine.
 - **[Nils Helmig](https://github.com/nilshelmig)**: For creating and maintaining the upstream **[`tree-sitter-sourcepawn`](https://github.com/nilshelmig/tree-sitter-sourcepawn)** grammar used for syntax highlighting.
 - **[AlliedModders LLC](https://alliedmods.net/)**: For the SourceMod platform, `spcomp` compiler, and the foundational SourcePawn language ecosystem.
 - **[`flutter-tools.nvim`](https://github.com/akinsho/flutter-tools.nvim)**: For the architectural inspiration behind the clean and modular structure of this plugin.
