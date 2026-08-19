@@ -39,8 +39,11 @@ describe("utils.path", function()
 		assert.is_true(res:find("bar") ~= nil)
 	end)
 
-	it("M.exists(vim.fn.stdpath('config')) returns true", function()
-		assert.is_true(M.exists(vim.fn.stdpath("config")))
+	it("M.exists() returns true for a directory that exists", function()
+		-- stdpath('data') is always created by Neovim at startup, safe on all platforms
+		local data_dir = vim.fn.stdpath("data")
+		vim.fn.mkdir(data_dir, "p")
+		assert.is_true(M.exists(data_dir))
 	end)
 
 	it("M.is_absolute function exists", function()
